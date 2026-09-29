@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResuMate | Build ATS-Friendly Resumes Instantly</title>
+  <meta name="description" content="Build premium, ATS-compliant resumes with real-time feedback. Test your resume against our ATS Score Checker to secure more interviews.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icon Libraries (Lucide Icons via CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- html2pdf.js for exporting HTML to PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" id="main-nav">
+    <div class="nav-container">
+      <a href="#home" class="logo" id="nav-logo">
+        <span class="logo-accent"><i data-lucide="sparkles"></i></span> ResuMate
+      </a>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="#home" class="active" id="link-home"><i data-lucide="home"></i> Home</a></li>
+        <li><a href="#ats-checker" id="link-ats"><i data-lucide="gauge"></i> ATS Score Checker</a></li>
+        <li><a href="#resume-builder" id="link-builder"><i data-lucide="file-signature"></i> Build Resume</a></li>
+        <li><a href="#templates" id="link-templates"><i data-lucide="layout"></i> Templates</a></li>
+        <li><a href="#about" id="link-about"><i data-lucide="info"></i> About</a></li>
+        <li><a href="#contact" id="link-contact"><i data-lucide="mail"></i> Contact</a></li>
+      </ul>
+      <div class="nav-toggle" id="mobile-menu-toggle">
+        <i data-lucide="menu"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="hero-bg-glows">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+    <div class="hero-container">
+      <h1 class="hero-title">Build <span class="gradient-text">ATS-Friendly</span> Resumes Instantly</h1>
+      <p class="hero-subtitle">Optimize your professional resume for applicant tracking systems, verify it with our AI-powered ATS checker, and fast-track your job applications.</p>
+      
+      <div class="hero-ctas">
+        <a href="#resume-builder" class="btn btn-primary" id="hero-btn-create">
+          <i data-lucide="file-plus"></i> Create Resume
+        </a>
+        <a href="#ats-checker" class="btn btn-secondary" id="hero-btn-check">
+          <i data-lucide="check-circle-2"></i> Check ATS Score
+        </a>
+      </div>
+
+      <div class="hero-dashboard-preview glass-card">
+        <div class="preview-header">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="preview-title">ResuMate Dashboard</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-left">
+            <div class="preview-widget">
+              <span class="widget-label">Target Keywords</span>
+              <div class="widget-tags">
+                <span class="tag tag-matched">React</span>
+                <span class="tag tag-matched">Node.js</span>
+                <span class="tag tag-missing">System Design</span>
+                <span class="tag tag-matched">SQL</span>
+              </div>
+            </div>
+            <div class="preview-widget">
+              <span class="widget-label">Readability Level</span>
+              <div class="bar-container">
+                <div class="bar-fill" style="width: 85%;"></div>
+              </div>
+              <span class="widget-value">Excellent (85%)</span>
+            </div>
+          </div>
+          <div class="preview-center">
+            <div class="circular-progress-demo">
+              <div class="inner-circle">
+                <span class="score-num">88</span>
+                <span class="score-max">/100</span>
+              </div>
+            </div>
+            <p class="score-label">Resume Optimization Score</p>
+          </div>
+          <div class="preview-right">
+            <div class="preview-widget">
+              <span class="widget-label">Structuring Status</span>
+              <ul class="widget-checklist">
+                <li><i data-lucide="check" class="text-green"></i> Standard Font Choice</li>
+                <li><i data-lucide="check" class="text-green"></i> Chronological Layout</li>
+                <li><i data-lucide="x" class="text-red"></i> Contact Details Column</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATS Score Checker Section -->
+  <section class="ats-section" id="ats-checker">
+    <div class="section-header">
+      <span class="badge">Optimize</span>
+      <h2 class="section-title">ATS Score Checker</h2>
+      <p class="section-desc">Upload your current resume in PDF or DOCX format to receive an instant analysis of layout issues, missing keywords, and readability scores.</p>
+    </div>
+
+    <div class="container ats-container">
+      <div class="ats-uploader-card glass-card" id="drop-zone">
+        <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt" hidden>
+        <div class="uploader-content" id="uploader-prompt">
+          <div class="upload-icon-wrapper">
+            <i data-lucide="upload-cloud" class="upload-icon"></i>
+          </div>
+          <h3>Drag & Drop your Resume</h3>
+          <p>Supports PDF, DOCX, DOC, or TXT (Max 10MB)</p>
+          <button class="btn btn-primary" id="browse-btn">Browse Files</button>
+        </div>
+        
+        <!-- Uploading Loader -->
+        <div class="uploader-loader hidden" id="uploader-loader">
+          <div class="spinner"></div>
+          <h3>Analyzing Document Structure...</h3>
+          <p>Checking parser compliance and comparing keywords.</p>
+        </div>
+      </div>
+
+      <!-- Results Display Card (Hidden by default) -->
+      <div class="ats-results-card glass-card hidden" id="ats-results">
+        <div class="results-header">
+          <h3>ATS Scanner Audit Report</h3>
+          <button class="btn-text" id="reupload-btn"><i data-lucide="rotate-ccw"></i> Upload Another</button>
+        </div>
+
+        <div class="results-grid">
+          <!-- Big Circular Score Display -->
+          <div class="results-score-col">
+            <div class="radial-score-box">
+              <svg class="score-svg" viewBox="0 0 100 100">
+                <circle class="score-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="score-fill" id="score-circle-path" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+              </svg>
+              <div class="score-text-overlay">
+                <span class="score-number" id="result-score-num">0</span>
+                <span class="score-label">ATS Score</span>
+              </div>
+            </div>
+            <div class="score-badge-status" id="score-status-badge">Requires Tuning</div>
+          </div>
+
+          <!-- Score Breakdown Metrics -->
+          <div class="results-metrics-col">
+            <div class="metric-row">
+              <div class="metric-meta">
+                <span>Readability Index</span>
+                <span id="readability-val">0%</span>
+              </div>
+              <div class="metric-progress"><div class="progress-bar-fill" id="readability-bar" style="width: 0%;"></div></div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-meta">
+                <span>Keyword Density</span>
+                <span id="keyword-val">0%</span>
+              </div>
+              <div class="metric-progress"><div class="progress-bar-fill" id="keyword-bar" style="width: 0%;"></div></div>
+            </div>
+            <div class="metric-row">
+              <div class="metric-meta">
+                <span>Layout & Formatting</span>
+                <span id="layout-val">0%</span>
+              </div>
+              <div class="metric-progress"><div class="progress-bar-fill" id="layout-bar" style="width: 0%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue Listings -->
+        <div class="results-tabs-container">
+          <div class="tabs-header">
+            <button class="tab-btn active" data-tab="tab-keywords"><i data-lucide="tag"></i> Keywords Analysis</button>
+            <button class="tab-btn" data-tab="tab-formatting"><i data-lucide="alert-triangle"></i> Formatting Issues (<span id="formatting-count">0</span>)</button>
+            <button class="tab-btn" data-tab="tab-improvement"><i data-lucide="trending-up"></i> Improvement Tips</button>
+          </div>
+          
+          <div class="tab-content active" id="tab-keywords">
+            <div class="keywords-analysis-view">
+              <div class="keyword-sub-section">
+                <h4><i data-lucide="check-circle" class="text-green"></i> Matched Industry Keywords</h4>
+                <div class="keywords-pool" id="matched-keywords-pool">
+                  <span class="keyword-pill matched">React</span>
+                </div>
+              </div>
+              <div class="keyword-sub-section">
+                <h4><i data-lucide="plus-circle" class="text-red"></i> Missing Keywords (Suggestions)</h4>
+                <p class="keywords-hint">Add these keywords to your resume to match common job descriptions in your domain:</p>
+                <div class="keywords-pool" id="missing-keywords-pool">
+                  <span class="keyword-pill missing">System Design</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-formatting">
+            <ul class="issues-list" id="formatting-issues-list">
+              <li><i data-lucide="x-circle" class="text-red"></i> Scanned image check passed.</li>
+            </ul>
+          </div>
+
+          <div class="tab-content" id="tab-improvement">
+            <ul class="tips-list" id="improvement-tips-list">
+              <li><i data-lucide="sparkles" class="text-blue"></i> Use action verbs to begin bullet points (e.g., "Led", "Executed", "Created").</li>
+              <li><i data-lucide="sparkles" class="text-blue"></i> Avoid tables, sidebars, and graphics, as standard ATS parsers fail to extract text from columns.</li>
+              <li><i data-lucide="sparkles" class="text-blue"></i> Save and upload your file in PDF format to maintain layout consistency.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resume Builder Section -->
+  <section class="builder-section" id="resume-builder">
+    <div class="section-header">
+      <span class="badge">Create</span>
+      <h2 class="section-title">Resume Builder Wizard</h2>
+      <p class="section-desc">Fill out your professional history in our step-by-step wizard. Choose a template and watch it update live on the right. Download as a clean, compliant PDF.</p>
+    </div>
+
+    <div class="builder-layout">
+      <!-- Left Panel: Input Form Wizard -->
+      <div class="builder-form-panel glass-card">
+        <div class="form-wizard-nav">
+          <button class="wizard-nav-btn active" data-step="step-personal" id="btn-step-personal"><i data-lucide="user"></i> Personal</button>
+          <button class="wizard-nav-btn" data-step="step-summary" id="btn-step-summary"><i data-lucide="file-text"></i> Summary</button>
+          <button class="wizard-nav-btn" data-step="step-experience" id="btn-step-experience"><i data-lucide="briefcase"></i> Experience</button>
+          <button class="wizard-nav-btn" data-step="step-education" id="btn-step-education"><i data-lucide="graduation-cap"></i> Education</button>
+          <button class="wizard-nav-btn" data-step="step-skills" id="btn-step-skills"><i data-lucide="award"></i> Skills</button>
+          <button class="wizard-nav-btn" data-step="step-projects" id="btn-step-projects"><i data-lucide="code-2"></i> Projects</button>
+        </div>
+
+        <div class="form-wizard-body">
+          <!-- Step 1: Personal Info -->
+          <div class="wizard-step active" id="step-personal">
+            <h3 class="step-title">Personal Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="input-fullname">Full Name</label>
+                <input type="text" id="input-fullname" placeholder="John Doe">
+              </div>
+              <div class="form-group">
+                <label for="input-jobtitle">Professional Title</label>
+                <input type="text" id="input-jobtitle" placeholder="Senior Frontend Engineer">
+              </div>
+              <div class="form-group">
+                <label for="input-email">Email Address</label>
+                <input type="email" id="input-email" placeholder="john.doe@example.com">
+              </div>
+              <div class="form-group">
+                <label for="input-phone">Phone Number</label>
+                <input type="tel" id="input-phone" placeholder="+1 (555) 019-2834">
+              </div>
+              <div class="form-group">
+                <label for="input-location">Location</label>
+                <input type="text" id="input-location" placeholder="San Francisco, CA">
+              </div>
+              <div class="form-group">
+                <label for="input-linkedin">LinkedIn Profile URL</label>
+                <input type="url" id="input-linkedin" placeholder="linkedin.com/in/johndoe">
+              </div>
+              <div class="form-group">
+                <label for="input-github">Portfolio / GitHub URL</label>
+                <input type="url" id="input-github" placeholder="github.com/johndoe">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Summary -->
+          <div class="wizard-step" id="step-summary">
+            <h3 class="step-title">Professional Summary</h3>
+            <p class="step-desc">Write a 3-4 sentence elevator pitch highlighting your key strengths, years of experience, and primary capabilities.</p>
+            <div class="form-group">
+              <label for="input-summary">Summary Text</label>
+              <textarea id="input-summary" rows="6" placeholder="Results-driven Frontend Engineer with 5+ years of experience specializing in React, TypeScript, and modern responsive design. Proven track record of improving web performance by 40% and leading engineering teams to deliver premium, scalable products."></textarea>
+            </div>
+          </div>
+
+          <!-- Step 3: Work Experience -->
+          <div class="wizard-step" id="step-experience">
+            <div class="step-header-row">
+              <h3 class="step-title">Work History</h3>
+              <button class="btn btn-secondary btn-sm" id="add-experience-btn"><i data-lucide="plus"></i> Add Job</button>
+            </div>
+            <div class="repeater-list" id="experience-list">
+              <!-- Dynamically populated experience blocks go here -->
+            </div>
+          </div>
+
+          <!-- Step 4: Education -->
+          <div class="wizard-step" id="step-education">
+            <div class="step-header-row">
+              <h3 class="step-title">Education History</h3>
+              <button class="btn btn-secondary btn-sm" id="add-education-btn"><i data-lucide="plus"></i> Add Education</button>
+            </div>
+            <div class="repeater-list" id="education-list">
+              <!-- Dynamically populated education blocks go here -->
+            </div>
+          </div>
+
+          <!-- Step 5: Skills -->
+          <div class="wizard-step" id="step-skills">
+            <h3 class="step-title">Skills & Competencies</h3>
+            <p class="step-desc">Group your skills by category (e.g. Languages, Frameworks, Tools) to make it easier for ATS scanners to map your profile.</p>
+            
+            <div class="form-group">
+              <label for="input-skills-tech">Technical / Hard Skills (Comma separated)</label>
+              <input type="text" id="input-skills-tech" placeholder="React, Node.js, Python, SQL, REST APIs, TypeScript, AWS, Git">
+            </div>
+
+            <div class="form-group">
+              <label for="input-skills-soft">Professional / Soft Skills (Comma separated)</label>
+              <input type="text" id="input-skills-soft" placeholder="Project Management, Agile, Communication, Problem Solving, Leadership">
+            </div>
+          </div>
+
+          <!-- Step 6: Projects -->
+          <div class="wizard-step" id="step-projects">
+            <div class="step-header-row">
+              <h3 class="step-title">Projects</h3>
+              <button class="btn btn-secondary btn-sm" id="add-project-btn"><i data-lucide="plus"></i> Add Project</button>
+            </div>
+            <div class="repeater-list" id="projects-list">
+              <!-- Dynamically populated projects go here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Navigation Footer -->
+        <div class="form-wizard-footer">
+          <button class="btn btn-secondary" id="wizard-prev-btn" disabled><i data-lucide="arrow-left"></i> Previous</button>
+          <button class="btn btn-primary" id="wizard-next-btn">Next <i data-lucide="arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Right Panel: Live Preview Panel -->
+      <div class="builder-preview-panel glass-card">
+        <div class="preview-controls">
+          <div class="template-selector">
+            <label for="select-template-id"><i data-lucide="palette"></i> Template Layout:</label>
+            <select id="select-template-id">
+              <option value="template-modern">Modern Minimalist</option>
+              <option value="template-classic">Classic Executive</option>
+              <option value="template-creative">Tech Professional</option>
+            </select>
+          </div>
+          <div class="preview-actions">
+            <button class="btn btn-success" id="btn-save-db"><i data-lucide="save"></i> Save Draft</button>
+            <button class="btn btn-primary" id="btn-download-pdf"><i data-lucide="download"></i> Download PDF</button>
+          </div>
+        </div>
+
+        <!-- The printable paper layout -->
+        <div class="resume-paper-wrapper">
+          <div class="resume-paper template-modern" id="resume-document">
+            <!-- Header Section -->
+            <div class="resume-header">
+              <h1 class="resume-name" id="preview-name">Your Full Name</h1>
+              <div class="resume-title" id="preview-title">Professional Title</div>
+              <div class="resume-contact" id="preview-contact">
+                <span id="preview-email-container"><i data-lucide="mail"></i> <span id="preview-email">email@example.com</span></span>
+                <span id="preview-phone-container"><i data-lucide="phone"></i> <span id="preview-phone">+1 (555) 000-0000</span></span>
+                <span id="preview-loc-container"><i data-lucide="map-pin"></i> <span id="preview-location">City, State</span></span>
+                <span id="preview-linkedin-container"><i data-lucide="linkedin"></i> <span id="preview-linkedin">linkedin.com/in/username</span></span>
+                <span id="preview-github-container"><i data-lucide="github"></i> <span id="preview-github">github.com/username</span></span>
+              </div>
+            </div>
+
+            <!-- Profile Summary -->
+            <div class="resume-section" id="preview-sec-summary">
+              <h3 class="resume-sec-title">Professional Summary</h3>
+              <div class="resume-sec-divider"></div>
+              <p class="resume-body" id="preview-summary">Write your professional summary in the wizard. It will instantly render in this space.</p>
+            </div>
+
+            <!-- Work Experience -->
+            <div class="resume-section" id="preview-sec-experience">
+              <h3 class="resume-sec-title">Work Experience</h3>
+              <div class="resume-sec-divider"></div>
+              <div class="resume-list" id="preview-experience">
+                <div class="resume-item-placeholder">Your work experience details will appear here as you enter them.</div>
+              </div>
+            </div>
+
+            <!-- Projects -->
+            <div class="resume-section" id="preview-sec-projects">
+              <h3 class="resume-sec-title">Key Projects</h3>
+              <div class="resume-sec-divider"></div>
+              <div class="resume-list" id="preview-projects">
+                <div class="resume-item-placeholder">Your project descriptions will load dynamically in this section.</div>
+              </div>
+            </div>
+
+            <!-- Education -->
+            <div class="resume-section" id="preview-sec-education">
+              <h3 class="resume-sec-title">Education</h3>
+              <div class="resume-sec-divider"></div>
+              <div class="resume-list" id="preview-education">
+                <div class="resume-item-placeholder">Your degrees and academic history.</div>
+              </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="resume-section" id="preview-sec-skills">
+              <h3 class="resume-sec-title">Skills</h3>
+              <div class="resume-sec-divider"></div>
+              <div class="resume-skills-grid">
+                <div class="skills-group" id="preview-skills-tech-group">
+                  <strong>Technical Skills:</strong> <span id="preview-skills-tech">Add skills...</span>
+                </div>
+                <div class="skills-group" id="preview-skills-soft-group">
+                  <strong>Professional Skills:</strong> <span id="preview-skills-soft">Add skills...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="saved-status-msg hidden" id="saved-notification">
+          <i data-lucide="check-circle"></i> Resume successfully saved.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Templates Section -->
+  <section class="templates-section" id="templates">
+    <div class="section-header">
+      <span class="badge">Explore</span>
+      <h2 class="section-title">ATS-Optimized Layouts</h2>
+      <p class="section-desc">Select any of our modern templates. They are explicitly styled for readability by parsers like Workday, Taleo, and Greenhouse.</p>
+    </div>
+
+    <div class="container templates-grid">
+      <!-- Card 1 -->
+      <div class="template-card glass-card">
+        <div class="temp-preview-img-wrapper modern-preview">
+          <div class="temp-mini-doc">
+            <div class="mini-bar header-bar"></div>
+            <div class="mini-bar sub-bar"></div>
+            <div class="mini-grid">
+              <div class="mini-bar body-bar"></div>
+              <div class="mini-bar body-bar"></div>
+            </div>
+          </div>
+        </div>
+        <div class="temp-info">
+          <h3>Modern Minimalist</h3>
+          <p>Clean single-column layout, designed to maximize reading space and key density.</p>
+          <button class="btn btn-secondary btn-select-template" data-template="template-modern">Use Template</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="template-card glass-card">
+        <div class="temp-preview-img-wrapper classic-preview">
+          <div class="temp-mini-doc">
+            <div class="mini-bar header-bar center-bar"></div>
+            <div class="mini-bar sub-bar center-bar"></div>
+            <div class="mini-bar body-bar"></div>
+            <div class="mini-bar body-bar"></div>
+            <div class="mini-bar body-bar"></div>
+          </div>
+        </div>
+        <div class="temp-info">
+          <h3>Classic Executive</h3>
+          <p>Elegant, centered header layout with traditional divider rules for conservative fields.</p>
+          <button class="btn btn-secondary btn-select-template" data-template="template-classic">Use Template</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="template-card glass-card">
+        <div class="temp-preview-img-wrapper creative-preview">
+          <div class="temp-mini-doc">
+            <div class="mini-bar header-bar left-bar"></div>
+            <div class="mini-bar sub-bar left-bar"></div>
+            <div class="mini-grid-cols">
+              <div class="mini-side">
+                <div class="mini-bar side-bar"></div>
+                <div class="mini-bar side-bar"></div>
+              </div>
+              <div class="mini-main">
+                <div class="mini-bar body-bar"></div>
+                <div class="mini-bar body-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="temp-info">
+          <h3>Tech Professional</h3>
+          <p>A compact, modern dual-column flow for engineers, researchers, and tech experts.</p>
+          <button class="btn btn-secondary btn-select-template" data-template="template-creative">Use Template</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="hero-bg-glows">
+      <div class="glow glow-1" style="bottom: 0; top: auto; right: 0;"></div>
+    </div>
+    <div class="container about-container">
+      <div class="about-info-col">
+        <span class="badge">Understand</span>
+        <h2 class="section-title">What is an Applicant Tracking System (ATS)?</h2>
+        <p class="about-para">An ATS is software used by employers to collect, scan, sort, and rank job applications. Over 98% of Fortune 500 companies use an ATS to screen resumes before they reach a human recruiter.</p>
+        
+        <div class="about-points">
+          <div class="about-point-item">
+            <div class="point-icon"><i data-lucide="ban"></i></div>
+            <div class="point-text">
+              <h4>Parser Failures</h4>
+              <p>Tables, floating text box columns, and graphs block standard ATS tools from parsing. They see blank pages or scrambled characters, leading to automatic rejection.</p>
+            </div>
+          </div>
+
+          <div class="about-point-item">
+            <div class="point-icon"><i data-lucide="key-round"></i></div>
+            <div class="point-text">
+              <h4>Keyword Matching</h4>
+              <p>The systems search for specific skills, technologies, and certifications from the job description. Matching keyword density directly determines your candidate rank.</p>
+            </div>
+          </div>
+
+          <div class="about-point-item">
+            <div class="point-icon"><i data-lucide="file-check-2"></i></div>
+            <div class="point-text">
+              <h4>ResuMate Compliance</h4>
+              <p>Our templates are rigorously designed to be 100% readable by parsers, assuring your information is extracted with flawless semantic accuracy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-diagram-col glass-card">
+        <h3 class="diagram-title">How the Resume Pipeline Works</h3>
+        <div class="pipeline-flow">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Submit Resume</h4>
+              <p>Candidate uploads PDF/Word document.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow"><i data-lucide="arrow-down"></i></div>
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>ATS Parsing</h4>
+              <p>System strips formatting and scans text for keywords, dates, and locations.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow"><i data-lucide="arrow-down"></i></div>
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Scoring & Rank</h4>
+              <p>Candidates are sorted by percentage match score.</p>
+            </div>
+          </div>
+          <div class="pipeline-arrow"><i data-lucide="arrow-down"></i></div>
+          <div class="pipeline-step highlight">
+            <div class="step-num"><i data-lucide="user-check"></i></div>
+            <div class="step-content">
+              <h4>Recruiter Review</h4>
+              <p>Top ranked candidates are selected for phone screenings.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="container contact-container">
+      <div class="contact-form-col glass-card">
+        <h3>Send us a Message</h3>
+        <form class="contact-form" id="contact-form-elem">
+          <div class="form-group">
+            <label for="contact-name">Your Name</label>
+            <input type="text" id="contact-name" required placeholder="Jane Smith">
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Your Email Address</label>
+            <input type="email" id="contact-email" required placeholder="jane.smith@example.com">
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" rows="5" required placeholder="How can we help you today?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="contact-submit-btn">
+            Send Message <i data-lucide="send"></i>
+          </button>
+          
+          <div class="form-success-msg hidden" id="contact-success">
+            <i data-lucide="check-circle"></i> Message sent successfully! We will get back to you soon.
+          </div>
+        </form>
+      </div>
+
+      <div class="contact-info-col">
+        <span class="badge">Connect</span>
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="contact-intro">Have questions about our ATS algorithm analysis, enterprise features, or customized templates? Reach out and we'll reply within 24 hours.</p>
+        
+        <div class="contact-methods">
+          <div class="contact-method-item">
+            <i data-lucide="mail"></i>
+            <div>
+              <h4>Support Email</h4>
+              <p>support@resumate.io</p>
+            </div>
+          </div>
+          <div class="contact-method-item">
+            <i data-lucide="phone"></i>
+            <div>
+              <h4>Call Center</h4>
+              <p>+1 (800) 555-0199 (Mon-Fri, 9am-6pm PST)</p>
+            </div>
+          </div>
+          <div class="contact-method-item">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <h4>Office Location</h4>
+              <p>100 Pine Street, San Francisco, CA 94111</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="#" class="social-icon"><i data-lucide="twitter"></i></a>
+          <a href="#" class="social-icon"><i data-lucide="linkedin"></i></a>
+          <a href="#" class="social-icon"><i data-lucide="github"></i></a>
+          <a href="#" class="social-icon"><i data-lucide="instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#home" class="logo">
+          <span class="logo-accent"><i data-lucide="sparkles"></i></span> ResuMate
+        </a>
+        <p>Premium Applicant Tracking System (ATS) optimization services and resume building tools.</p>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-links-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#ats-checker">ATS Score Checker</a></li>
+            <li><a href="#resume-builder">Resume Wizard</a></li>
+            <li><a href="#templates">Templates Gallery</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#about">What is an ATS?</a></li>
+            <li><a href="#about">Resume Checklist</a></li>
+            <li><a href="#about">Careers Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">GDPR Compliance</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ResuMate Inc. All rights reserved. Designed for maximum hireability.</p>
+    </div>
+  </footer>
+
+  <!-- App Main Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
